@@ -9,6 +9,9 @@ import com.aravind.finance.repositories.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ExpenseService {
 
@@ -89,6 +92,32 @@ public class ExpenseService {
             }
             return allByPaymentMode;
         }
+    }
+    public ExpenseModel getExpenseByID(int expenseId){
+        ExpenseModel expense = expenseRepository.findByExpenseId(expenseId);
+        if(expense == null) {
+            throw new ExpenseException("There is no exception with the ID "+ expenseId);
+        }
+        return expense;
+    }
+
+    public void deleteExpenseByID(int expenseId) {
+        ExpenseModel expense = expenseRepository.findByExpenseId(expenseId);
+        if(expense == null){
+            throw new ExpenseException("There is no expense with "+ expenseId +" Hence cannot delete it");
+        }
+        expenseRepository.delete(expense);
+    }
+
+    public List<Integer> deleteUserExpenses(String userId) {
+        Iterable<ExpenseModel> allByUserId = expenseRepository.findAllByUserId(userId);
+        if(allByUserId.spliterator().getExactSizeIfKnown() == 0
+                || allByUserId.spliterator().getExactSizeIfKnown() == -1){
+            throw new ExpenseException("No Expenses Found on the user " + userId);
+        }
+        List<ExpenseModel> expenseModels = expenseRepository.deleteAllByUserId(userId);
+        return expenseModels.stream().map(expenseModel -> expenseModel.getExpenseId()).collect(Collectors.toList());
+
     }
 
 }
