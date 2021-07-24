@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { createExpense } from "../../actions/projectActions";
 import classnames from "classnames";
-import "./Expense.scss";
+import "./Expense.css";
 import { FaRupeeSign } from "react-icons/fa";
 
 class AddExpense extends Component {
@@ -68,7 +68,7 @@ class AddExpense extends Component {
                     placeholder="User ID"
                     name="userId"
                     onChange={this.onChange}
-                    value={123}
+                    value={this.state.userId}
                     className={classnames("form-control form-control-lg", {
                       "is-invalid": errors.userId,
                     })}
