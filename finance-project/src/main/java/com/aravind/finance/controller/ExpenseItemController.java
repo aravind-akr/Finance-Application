@@ -20,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/finance/expenses")
+@CrossOrigin
 public class ExpenseItemController {
 
     @Autowired
