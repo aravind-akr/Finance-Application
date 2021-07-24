@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import CreateExpenseButton from './CreateExpenseButton';
-import './Expense.scss';
+import './Expense.css';
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 
@@ -20,7 +20,7 @@ class ExpenseDashboard extends Component{
                             Expense DashBoard
                         </div>
                         <hr className="mt-4 mb-5 dotted"/>
-                        {console.log(expenses)}
+                        {console.log(this.props.expense)}
                     </div>
                 </div>
             </div>
