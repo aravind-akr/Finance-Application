@@ -26,3 +26,16 @@ hr.dotted{
 .custom-currency{
     font-size: 2em
 }
+
+.expense-row{
+    border: 1 solid;
+}
+
+.expense-row > div {
+  height: 100%;
+  background: #f5f3f3;
+  border: 1px solid coral;
+  border-radius: 8px;
+  text-align: center;
+  display: table-row;
+}
