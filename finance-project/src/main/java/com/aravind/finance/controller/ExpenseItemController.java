@@ -1,5 +1,6 @@
 package com.aravind.finance.controller;
 
+import com.aravind.finance.exceptions.ExpenseException;
 import com.aravind.finance.exceptions.UserIdException;
 import com.aravind.finance.models.ExpenseModel;
 import com.aravind.finance.repositories.ExpenseRepository;
@@ -15,9 +16,11 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/finance/expenses")
+@CrossOrigin
 public class ExpenseItemController {
 
     @Autowired
@@ -88,5 +91,28 @@ public class ExpenseItemController {
     @GetMapping("/mode-expense/{mode}")
     public Iterable<ExpenseModel> getAllExpensesByPaymentMode(@PathVariable String mode){
         return expenseService.getAllExpensesByMode(mode);
+    }
+
+    @GetMapping("/get/{expenseId}")
+    public ExpenseModel getExpenseById(@PathVariable int expenseId){
+        ExpenseModel expenseByID = expenseService.getExpenseByID(expenseId);
+        if(expenseByID == null){
+            throw new ExpenseException("No expenses found");
+        }
+        return expenseByID;
+    }
+
+    //Delete the expense with its id
+    @DeleteMapping("/deleteEx/{expenseId}")
+    public ResponseEntity<?> deleteExpenseById(@PathVariable int expenseId){
+        expenseService.deleteExpenseByID(expenseId);
+        return new ResponseEntity<>("Expense with ID "+ expenseId +" is deleted", HttpStatus.OK);
+    }
+
+    //Delete the expenses of the user.
+    @DeleteMapping("/deleteUs/{userId}")
+    public ResponseEntity<?> deleteUserExpenses(@PathVariable String userId){
+        List<Integer> expenses = expenseService.deleteUserExpenses(userId);
+        return new ResponseEntity<>(String.format("User with ID %s expenses %s are deleted", userId, expenses),HttpStatus.OK);
     }
 }
