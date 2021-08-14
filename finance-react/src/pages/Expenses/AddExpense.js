@@ -210,7 +210,7 @@ class AddExpense extends Component {
 
 AddExpense.propTypes = {
     createExpense: PropTypes.func.isRequired,
-    errors:PropTypes.object.isRequired
+    errors:PropTypes.string.isRequired
 };
 
 const mapStateToProps = (state) => ({
