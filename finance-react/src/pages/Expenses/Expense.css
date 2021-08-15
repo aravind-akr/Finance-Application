@@ -28,14 +28,17 @@ hr.dotted{
 }
 
 .expense-row{
-    border: 1 solid;
+    border: 2px coral solid;
 }
 
 .expense-row > div {
   height: 100%;
   background: #f5f3f3;
-  border: 1px solid coral;
+  border-right: 1px dotted red;
   border-radius: 8px;
   text-align: center;
   display: table-row;
+  font-family: 'Lucida Handwriting', cursive;
+  color:firebrick;
+  font-size: 80%;
 }

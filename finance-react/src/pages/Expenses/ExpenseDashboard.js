@@ -14,7 +14,6 @@ function ExpenseDashboard(){
         .then((res) => res.json())
         .then((expense) => {
             setExpense(expense)
-            console.log("data is set to expense");
         })
         .catch((err) => {
             console.log(err);
@@ -31,7 +30,6 @@ function ExpenseDashboard(){
                         Expense DashBoard
                     </div>
                     <hr className="mt-4 mb-5 dotted"/>
-                    {console.log({expense})}
                     {expense.map((item) => (
                         <ExpenseItem key={item.id} expense={item}/>
                     ))}                                       

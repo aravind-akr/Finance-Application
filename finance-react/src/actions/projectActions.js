@@ -25,9 +25,9 @@ export const getExpenses = () => async (dispatch) => {
     });
 };
 
-export const getExpense = (id, history) => async (dispatch) => {
+export const getExpense = (expenseId, history) => async (dispatch) => {
     try{
-        const res = await axios.get(`http://localhost:8080/finance/expenses/get/${id}`);
+        const res = await axios.get(`http://localhost:8080/finance/expenses/get/${expenseId}`);
         dispatch({
             type:GET_EXPENSE,
             payload:res.data

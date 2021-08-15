@@ -8,7 +8,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-@Transactional
 public interface ExpenseRepository extends CrudRepository<ExpenseModel,Long> {
 
     Iterable<ExpenseModel> findAllByUserId(String userId);
@@ -26,5 +25,7 @@ public interface ExpenseRepository extends CrudRepository<ExpenseModel,Long> {
     ExpenseModel findByExpenseId(int expenseId);
 
     List<ExpenseModel> deleteAllByUserId(String userId);
+
+
 
 }
