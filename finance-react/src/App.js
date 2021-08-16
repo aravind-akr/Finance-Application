@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import "./App.css";
-import Header from "./layout/Header";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import ExpenseDashboard from "./pages/Expenses/ExpenseDashboard";
 import { Provider } from "react-redux";
 import store from "./store";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Header from "./layout/Header";
+import ExpenseDashboard from "./pages/Expenses/ExpenseDashboard";
 import AddExpense from "./pages/Expenses/AddExpense";
 import UpdateExpense from "./pages/Expenses/UpdateExpense";
+import "./App.css";
 
 class App extends Component {
   render(){

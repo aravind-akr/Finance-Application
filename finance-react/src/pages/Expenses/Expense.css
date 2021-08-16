@@ -9,8 +9,7 @@
 }
 
 hr.dotted{
-    border-top: 2px dotted blue;
-    
+    border-top: 2px dotted blue;    
     align-items: center;
     justify-content: center;
 }
@@ -27,18 +26,33 @@ hr.dotted{
     font-size: 2em
 }
 
-.expense-row{
-    border: 2px coral solid;
+.expense-row, .row-head{
+    border: 0.5px grey solid;
+    max-width: 100%;
 }
 
-.expense-row > div {
-  height: 100%;
-  background: #f5f3f3;
-  border-right: 1px dotted red;
-  border-radius: 8px;
-  text-align: center;
-  display: table-row;
-  font-family: 'Lucida Handwriting', cursive;
-  color:firebrick;
-  font-size: 80%;
+.expense-row  > div {
+    height: 100%;
+    background: #f5f3f3;
+    border-right: 0.5px dotted black;
+    border-radius: 4px;
+    text-align: center;
+    display: table;
+    font-family: 'Lucida Handwriting', cursive;
+    color:firebrick;
+    font-size: 60%;
+}
+
+.row-head{
+    color: blueviolet;
+    font-family: 'Copperplate', Fantasy;
+    font-size: 65%;
+    border-bottom: 1px solid #003333;
+}
+
+.row-head-border{    
+    text-align: center;
+    display: table;
+    height: 100%;
+    border-right: 0.5px dotted black;
 }

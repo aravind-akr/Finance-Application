@@ -1,11 +1,10 @@
-import React, { Component , useState , useEffect } from 'react';
-import CreateExpenseButton from './CreateExpenseButton';
-import './Expense.css';
+import React, { useState , useEffect } from 'react';
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
+import CreateExpenseButton from './CreateExpenseButton';
 import ExpenseItem from './ExpenseItem';
-import { getExpenses } from '../../actions/projectActions';
-import axios from "axios";
+import ExpenseTableOutline from './ExpenseTableOutline';
+import './Expense.css';
 
 function ExpenseDashboard(){
     const [expense, setExpense] = useState([]);
@@ -30,6 +29,7 @@ function ExpenseDashboard(){
                         Expense DashBoard
                     </div>
                     <hr className="mt-4 mb-5 dotted"/>
+                    <ExpenseTableOutline />
                     {expense.map((item) => (
                         <ExpenseItem key={item.id} expense={item}/>
                     ))}                                       
