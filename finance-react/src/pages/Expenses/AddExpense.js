@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { createExpense } from "../../actions/projectActions";
 import classnames from "classnames";
-import "./Expense.css";
 import { FaRupeeSign } from "react-icons/fa";
+import { createExpense } from "../../actions/expenseActions";
+import "./Expense.css";
 
 class AddExpense extends Component {
   constructor() {

@@ -21,7 +21,7 @@ export default function(state = initialState, action){
         case DELETE_EXPENSE:
             return{
                 ...state,
-                expenses:state.payload.filter(
+                expenses:state.expenses.filter(
                     (expense) => expense.expenseId !== action.payload
                 ),
             };
