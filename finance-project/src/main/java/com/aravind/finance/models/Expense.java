@@ -3,16 +3,13 @@ package com.aravind.finance.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.ColumnTransformer;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-public class ExpenseModel {
+public class Expense {
 
     @NotBlank(message = "user Id is required")
     private String userId;
@@ -38,7 +35,20 @@ public class ExpenseModel {
     @NotBlank(message = "Payment Mode is required")
     private String paymentMode;
 
-    public ExpenseModel(){}
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Column(updatable = false)
+    private Date createdAt;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date updatedAt;
+
+    @PrePersist
+    protected void onCreate() {this.createdAt = new Date();}
+
+    @PreUpdate
+    protected void onUpdate() {this.updatedAt = new Date();}
+
+    public Expense(){}
 
     public String getUserId() {
         return userId;

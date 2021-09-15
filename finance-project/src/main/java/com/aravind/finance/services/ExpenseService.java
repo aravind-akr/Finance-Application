@@ -4,12 +4,11 @@ import com.aravind.finance.exceptions.CategoryException;
 import com.aravind.finance.exceptions.ExpenseException;
 import com.aravind.finance.exceptions.ModeExcpetion;
 import com.aravind.finance.exceptions.UserIdException;
-import com.aravind.finance.models.ExpenseModel;
+import com.aravind.finance.models.Expense;
 import com.aravind.finance.repositories.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +18,7 @@ public class ExpenseService {
     @Autowired
     private ExpenseRepository expenseRepository;
 
-    public ExpenseModel saveOrUpdateExpense(ExpenseModel itemModel) {
+    public Expense saveOrUpdateExpense(Expense itemModel) {
         try {
             return expenseRepository.save(itemModel);
         } catch (Exception ex) {
@@ -28,22 +27,22 @@ public class ExpenseService {
         return null;
     }
 
-    public ExpenseModel getSingleExpenseOfUser(String userId) {
+    public Expense getSingleExpenseOfUser(String userId) {
         if (userId.isEmpty()) {
             throw new UserIdException(userId + " Does not exist");
         } else {
-            ExpenseModel expenseModel = expenseRepository.findByUserId(userId);
-            if (expenseModel == null)
+            Expense expense = expenseRepository.findByUserId(userId);
+            if (expense == null)
                 throw new ExpenseException(userId + "' did not make any payments");
-            return expenseModel;
+            return expense;
         }
     }
 
-    public Iterable<ExpenseModel> getAllExpensesOfUser(String userId) {
+    public Iterable<Expense> getAllExpensesOfUser(String userId) {
         if (userId.isEmpty()) {
             throw new UserIdException(userId + " Does not exist");
         } else {
-            Iterable<ExpenseModel> allByUserId =
+            Iterable<Expense> allByUserId =
                     expenseRepository.findAllByUserId(userId);
             if (allByUserId.spliterator().getExactSizeIfKnown() == 0
                     || allByUserId.spliterator().getExactSizeIfKnown() == -1) {
@@ -53,11 +52,11 @@ public class ExpenseService {
         }
     }
 
-    public Iterable<ExpenseModel> getAllExpensesByCategory(String category) {
+    public Iterable<Expense> getAllExpensesByCategory(String category) {
         if (category.isEmpty()) {
             throw new CategoryException(category + "Not Found");
         } else {
-            Iterable<ExpenseModel> allByCategory =
+            Iterable<Expense> allByCategory =
                     expenseRepository.findAllByCategoryIgnoreCase(category);
             if (allByCategory.spliterator().getExactSizeIfKnown() == 0
                     || allByCategory.spliterator().getExactSizeIfKnown() == -1) {
@@ -67,11 +66,11 @@ public class ExpenseService {
         }
     }
 
-    public Iterable<ExpenseModel> getAllExpensesBySubCategory(String subCategory) {
+    public Iterable<Expense> getAllExpensesBySubCategory(String subCategory) {
         if (subCategory.isEmpty()) {
             throw new CategoryException(subCategory + "Not Found");
         } else {
-            Iterable<ExpenseModel> allBySubCategory =
+            Iterable<Expense> allBySubCategory =
                     expenseRepository.findAllBySubCategoryIgnoreCase(subCategory);
             if (allBySubCategory.spliterator().getExactSizeIfKnown() == 0
                     || allBySubCategory.spliterator().getExactSizeIfKnown() == -1) {
@@ -81,11 +80,11 @@ public class ExpenseService {
         }
     }
 
-    public Iterable<ExpenseModel> getAllExpensesByMode(String mode) {
+    public Iterable<Expense> getAllExpensesByMode(String mode) {
         if (mode.isEmpty()) {
             throw new ModeExcpetion(mode + "Not Found");
         } else {
-            Iterable<ExpenseModel> allByPaymentMode =
+            Iterable<Expense> allByPaymentMode =
                     expenseRepository.findAllByPaymentModeIgnoreCase(mode);
             if (allByPaymentMode.spliterator().getExactSizeIfKnown() == 0
                     || allByPaymentMode.spliterator().getExactSizeIfKnown() == -1) {
@@ -94,8 +93,8 @@ public class ExpenseService {
             return allByPaymentMode;
         }
     }
-    public ExpenseModel getExpenseByID(int expenseId){
-        ExpenseModel expense = expenseRepository.findByExpenseId(expenseId);
+    public Expense getExpenseByID(int expenseId){
+        Expense expense = expenseRepository.findByExpenseId(expenseId);
         if(expense == null) {
             throw new ExpenseException("There is no exception with the ID "+ expenseId);
         }
@@ -103,7 +102,7 @@ public class ExpenseService {
     }
 
     public void deleteExpenseByID(int expenseId) {
-        ExpenseModel expense = expenseRepository.findByExpenseId(expenseId);
+        Expense expense = expenseRepository.findByExpenseId(expenseId);
         if(expense == null){
             throw new ExpenseException("There is no expense with "+ expenseId +" Hence cannot delete it");
         }
@@ -111,13 +110,13 @@ public class ExpenseService {
     }
 
     public List<Integer> deleteUserExpenses(String userId) {
-        Iterable<ExpenseModel> allByUserId = expenseRepository.findAllByUserId(userId);
+        Iterable<Expense> allByUserId = expenseRepository.findAllByUserId(userId);
         if(allByUserId.spliterator().getExactSizeIfKnown() == 0
                 || allByUserId.spliterator().getExactSizeIfKnown() == -1){
             throw new ExpenseException("No Expenses Found on the user " + userId);
         }
-        List<ExpenseModel> expenseModels = expenseRepository.deleteAllByUserId(userId);
-        return expenseModels.stream().map(expenseModel -> expenseModel.getExpenseId()).collect(Collectors.toList());
+        List<Expense> expenses = expenseRepository.deleteAllByUserId(userId);
+        return expenses.stream().map(expense -> expense.getExpenseId()).collect(Collectors.toList());
 
     }
 

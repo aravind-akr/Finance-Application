@@ -2,7 +2,7 @@ package com.aravind.finance.controller;
 
 import com.aravind.finance.exceptions.ExpenseException;
 import com.aravind.finance.exceptions.UserIdException;
-import com.aravind.finance.models.ExpenseModel;
+import com.aravind.finance.models.Expense;
 import com.aravind.finance.repositories.ExpenseRepository;
 import com.aravind.finance.services.MapValidationErrorService;
 import com.aravind.finance.services.ExpenseService;
@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/finance/expenses")
 @CrossOrigin
-public class ExpenseItemController {
+public class ExpenseController {
 
     @Autowired
     private ExpenseService expenseService;
@@ -33,13 +33,13 @@ public class ExpenseItemController {
     private ExpenseRepository expenseRepository;
 
     @PostMapping("/add")
-    public ResponseEntity<?> createNewExpense(@Valid @RequestBody ExpenseModel expenseModel,
+    public ResponseEntity<?> createNewExpense(@Valid @RequestBody Expense expense,
                                               BindingResult result){
         ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationErrorService(result);
         if(errorMap!=null) return errorMap;
 
-        ExpenseModel expenseModel1 = expenseService.saveOrUpdateExpense(expenseModel);
-        return new ResponseEntity<>(expenseModel1, HttpStatus.CREATED);
+        Expense expense1 = expenseService.saveOrUpdateExpense(expense);
+        return new ResponseEntity<>(expense1, HttpStatus.CREATED);
     }
 
     @GetMapping("/user-expense/{userId}")
@@ -66,36 +66,36 @@ public class ExpenseItemController {
      */
     @GetMapping("/user-single-expense/{userId}")
     public ResponseEntity<?> getSingleExpensesOfUser(@PathVariable String userId){
-        ExpenseModel expenseModel = expenseService.getSingleExpenseOfUser(userId);
-        return new ResponseEntity<>(expenseModel,HttpStatus.OK);
+        Expense expense = expenseService.getSingleExpenseOfUser(userId);
+        return new ResponseEntity<>(expense,HttpStatus.OK);
     }
 
     /**
      * If the userId has more than one purchases
      */
     @GetMapping("/user-expenses/{userId}")
-    public Iterable<ExpenseModel> getAllExpensesOfUser(@PathVariable String userId){
+    public Iterable<Expense> getAllExpensesOfUser(@PathVariable String userId){
         return expenseService.getAllExpensesOfUser(userId);
     }
     
     @GetMapping("/category-expense/{category}")
-    public Iterable<ExpenseModel> getAllExpensesByCategory(@PathVariable String category){
+    public Iterable<Expense> getAllExpensesByCategory(@PathVariable String category){
         return expenseService.getAllExpensesByCategory(category);
     }
 
     @GetMapping("/subCategory-expense/{subCategory}")
-    public Iterable<ExpenseModel> getAllExpensesBySubCategory(@PathVariable String subCategory){
+    public Iterable<Expense> getAllExpensesBySubCategory(@PathVariable String subCategory){
         return expenseService.getAllExpensesBySubCategory(subCategory);
     }
 
     @GetMapping("/mode-expense/{mode}")
-    public Iterable<ExpenseModel> getAllExpensesByPaymentMode(@PathVariable String mode){
+    public Iterable<Expense> getAllExpensesByPaymentMode(@PathVariable String mode){
         return expenseService.getAllExpensesByMode(mode);
     }
 
     @GetMapping("/get/{expenseId}")
-    public ExpenseModel getExpenseById(@PathVariable int expenseId){
-        ExpenseModel expenseByID = expenseService.getExpenseByID(expenseId);
+    public Expense getExpenseById(@PathVariable int expenseId){
+        Expense expenseByID = expenseService.getExpenseByID(expenseId);
         if(expenseByID == null){
             throw new ExpenseException("No expenses found");
         }
