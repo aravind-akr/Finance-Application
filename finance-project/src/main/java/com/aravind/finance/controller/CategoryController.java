@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/finance")
@@ -34,14 +35,48 @@ public class CategoryController {
 
     }
 
-    @PostMapping("/category/{category_id}/subCategory/add")
+    @PostMapping("/category/{categoryId}/subCategory/add")
     public ResponseEntity<?> createNewSubCategory(@Valid @RequestBody SubCategory subCategory,
-                                               BindingResult result, @PathVariable int category_id){
+                                               BindingResult result, @PathVariable int categoryId){
         ResponseEntity<?> errorMap = errorService.mapValidationErrorService(result);
         if(errorMap!=null) return errorMap;
 
-        SubCategory subCategory1 = categoryService.saveOrUpdateSubCategory(subCategory, category_id);
+        SubCategory subCategory1 = categoryService.saveOrUpdateSubCategory(subCategory, categoryId);
         return new ResponseEntity<>(subCategory1, HttpStatus.CREATED);
 
     }
+
+    @GetMapping("/category/all")
+    public Iterable<Category> getAllCategories(){
+        return categoryService.findAllCategories();
+    }
+
+    @GetMapping("/subCategory/all")
+    public Iterable<SubCategory> getAllSubCategories(){
+        return categoryService.findAllSubCategories();
+    }
+
+    @GetMapping("/subCategory/get/{subCategoryId}")
+    public String getParentCategoryBySubCategory(@PathVariable int subCategoryId){
+        return categoryService.getParentCategoryBySubCategory(subCategoryId);
+    }
+
+    @GetMapping("/category/subCategory/{categoryId}")
+    public List<String> getAllSubCategoriesByCategoryId(@PathVariable int categoryId){
+        return categoryService.getSubCategoryListForCategory(categoryId);
+    }
+
+    @DeleteMapping("/category/delete/{categoryId}")
+    public ResponseEntity<?> deleteCategoryByID(@PathVariable int categoryId){
+        categoryService.deleteCategoryByID(categoryId);
+        return new ResponseEntity<>("Category with ID: "+categoryId+" is deleted", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/subCategory/delete/{subCategoryId}")
+    public ResponseEntity<?> deleteSubCategoryByID(@PathVariable int subCategoryId){
+        categoryService.deleteSubCategoryByID(subCategoryId);
+        return new ResponseEntity<>("Sub Category with ID: "+subCategoryId+" is deleted", HttpStatus.OK);
+    }
+
+
 }

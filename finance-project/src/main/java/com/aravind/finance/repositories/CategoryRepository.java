@@ -12,4 +12,7 @@ public interface CategoryRepository extends CrudRepository<Category, Long> {
 
     Category findById(int category_id);
 
+    @Override
+    Iterable<Category> findAll();
+
 }
