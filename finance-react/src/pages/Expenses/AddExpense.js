@@ -4,40 +4,74 @@ import { connect } from "react-redux";
 import classnames from "classnames";
 import { FaRupeeSign } from "react-icons/fa";
 import { createExpense } from "../../actions/expenseActions";
-import { getCategories } from "../../actions/categoryActions";
-import axios from 'axios';
+import { getSubCategories } from "../../actions/categoryActions";
+import axios from "axios";
 import "./Expense.css";
 
 class AddExpense extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       userId: "",
       expenseName: "",
       categories: [],
-      subCategory: "",
+      category_id: "",
+      subCategories: [],
       paymentDate: "",
       paymentMode: "",
       amount: "",
       errors: {},
     };
     this.onChange = this.onChange.bind(this);
+    this.onCategoryChange = this.onCategoryChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentDidMount(){
+  // eslint-disable-next-line no-dupe-class-members
+  async componentDidMount() {
     axios
       .get("http://localhost:8080/finance/category/all")
-      .then(response => {
+      .then((response) => {
         console.log(response.data);
-        this.setState({categories:response.data})
+        this.setState({ categories: response.data });
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
+   // this.props.getSubCategories(this.state.category_id);
   }
+
+  // // eslint-disable-next-line no-dupe-class-members
+  // async componentDidMount() {
+  //   axios
+  //     .get("http://localhost:8080/finance/subCategory/all")
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       this.setState({ subCategories: response.data });
+  //     })
+  //     .catch((err) => console.log(err));
+  // }
+
+  // // eslint-disable-next-line no-dupe-class-members
+  // async componentDidMount(){
+  //   Promise.all([
+  //     fetch("http://localhost:8080/finance/category/all").then(response => response.json()),
+  //     fetch("http://localhost:8080/finance/category/subCategory/"+this.state.category_id).then(response => response.json())
+  //   ]).then(([categories,subCategories]) => {
+  //     this.setState({
+  //       categories:categories,
+  //       subCategories:subCategories
+  //   })
+  //   console.log(categories);
+  //   console.log(subCategories);
+  //     })};
+
+  //   }
+  //   // catch((err) => console.log(err))
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
-      this.setState({ errors: nextProps.errors });
+      this.setState({
+        errors: nextProps.errors,
+      });
     }
   }
 
@@ -47,24 +81,31 @@ class AddExpense extends Component {
     });
   }
 
+  onCategoryChange(e) {
+    const index = e.target.selectedIndex;
+    this.setState({
+      category_id: e.target.selectedIndex,
+    });
+  }
+
   onSubmit(e) {
     e.preventDefault();
     const newExpense = {
       userId: this.state.userId,
       expenseName: this.state.expenseName,
       categories: this.state.categories,
-      subCategory: this.state.subCategory,
+      subCategories: this.state.subCategories,
       paymentDate: this.state.paymentDate,
       paymentMode: this.state.paymentMode,
       amount: this.state.amount,
     };
     this.props.createExpense(newExpense, this.props.history);
-    
   }
 
   render() {
     const { errors } = this.state;
     const categoryList = this.state.categories;
+    const subCategoryList = this.state.subCategories;
     return (
       <div className="register">
         <div className="container">
@@ -111,18 +152,28 @@ class AddExpense extends Component {
                   )}
                 </div>
                 <div className="form-group col-lg-7 mx-auto">
-                  <select 
+                  <select
                     name="category"
                     placeholder="Select the Category"
-                    onChange={this.onChange}
+                    onChange={this.onCategoryChange}
                     className={classnames("form-control form-control-lg", {
                       "is-invalid": errors.category,
                     })}
                   >
-                    <option value="" disabled selected>Select the Category</option>
-                    {categoryList && categoryList.length > 0 && categoryList.map(category => 
-                      {
-                        return <option key={category.id} value={category.categoryName}>{category.categoryName}</option>
+                    <option value="" disabled selected>
+                      Select the Category
+                    </option>
+                    {categoryList &&
+                      categoryList.length > 0 &&
+                      categoryList.map((category) => {
+                        return (
+                          <option
+                            key={category.id}
+                            value={category.categoryName}
+                          >
+                            {category.categoryName}
+                          </option>
+                        );
                       })}
                   </select>
                   {/* <input
@@ -142,16 +193,40 @@ class AddExpense extends Component {
                   )}
                 </div>
                 <div className="form-group col-lg-7 mx-auto">
-                  <input
+                  <select
+                    name="subCategory"
+                    placeholder="Select the Sub Category"
+                    onChange={this.onChange}
+                    className={classnames("form-control form-control-lg", {
+                      "is-invalid": errors.subCategory,
+                    })}
+                  >
+                    <option value="" disabled selected>
+                      Select the Sub Category
+                    </option>
+                    {subCategoryList &&
+                      subCategoryList.length > 0 &&
+                      subCategoryList.map((subCategory) => {
+                        return (
+                          <option
+                            key={subCategory.id}
+                            value={subCategory.subCategory}
+                          >
+                            {subCategory.subCategory}
+                          </option>
+                        );
+                      })}
+                  </select>
+                  {/* <input
                     type="text"
-                    placeholder="Enter the sub category"
+                    placeholder="Select the sub category"
                     name="subCategory"
                     className={classnames("form-control form-control-lg", {
                       "is-invalid": errors.subCategory,
                     })}
                     onChange={this.onChange}
                     value={this.state.subCategory}
-                  />
+                  /> */}
                   {errors.subCategory && (
                     <div className="invalid-feedback text-justify">
                       {errors.subCategory}
@@ -237,13 +312,16 @@ class AddExpense extends Component {
 }
 
 AddExpense.propTypes = {
-    createExpense: PropTypes.func.isRequired,
-    getExpense: PropTypes.func.isRequired,
-    errors:PropTypes.string.isRequired
+  createExpense: PropTypes.func.isRequired,
+  getExpense: PropTypes.func.isRequired,
+  getSubCategories: PropTypes.func.isRequired,
+  errors: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-    errors:state.errors,
+  errors: state.errors,
 });
 
-export default connect(mapStateToProps, {createExpense})(AddExpense);
+export default connect(mapStateToProps, { getSubCategories, createExpense })(
+  AddExpense
+);

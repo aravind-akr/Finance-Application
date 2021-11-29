@@ -11,7 +11,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/finance")
@@ -62,7 +61,7 @@ public class CategoryController {
     }
 
     @GetMapping("/category/subCategory/{categoryId}")
-    public List<String> getAllSubCategoriesByCategoryId(@PathVariable int categoryId){
+    public Iterable<SubCategory> getAllSubCategoriesByCategoryId(@PathVariable int categoryId){
         return categoryService.getSubCategoryListForCategory(categoryId);
     }
 

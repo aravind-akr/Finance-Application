@@ -65,10 +65,10 @@ public class CategoryService {
         return categoryName;
     }
 
-    public List<String> getSubCategoryListForCategory(int categoryId){
-        List<String> subCategories;
+    public Iterable<SubCategory> getSubCategoryListForCategory(int categoryId){
+        Iterable<SubCategory> subCategories;
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("select s.subCategory from Category c join c.subCategories s where c.id=:id");
+        Query query = session.createQuery("select s from Category c join c.subCategories s where c.id=:id");
         query.setParameter("id",categoryId);
         subCategories = query.list();
         return subCategories;
