@@ -24,6 +24,9 @@ public class Category {
     @JsonIgnore
     private List<SubCategory> subCategories = new ArrayList<>();
 
+    @OneToOne(mappedBy="category", cascade = CascadeType.ALL)
+    private Expense expense;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(updatable = false)
     private Date createdAt;

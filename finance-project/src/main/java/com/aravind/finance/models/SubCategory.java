@@ -26,6 +26,9 @@ public class SubCategory {
     @JsonBackReference
     private Category category;
 
+    @OneToOne(mappedBy="subCategory", cascade = CascadeType.ALL)
+    private Expense expense;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(updatable = false)
     private Date createdAt;
@@ -39,6 +42,9 @@ public class SubCategory {
 
     @PreUpdate
     protected void onUpdate() {this.updatedAt = new Date();}
+
+    public SubCategory() {
+    }
 
     public Integer getId() {
         return id;

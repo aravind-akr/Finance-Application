@@ -15,9 +15,9 @@ public interface ExpenseRepository extends CrudRepository<Expense,Long> {
 
     long countByUserId(String userId);
 
-    Iterable<Expense> findAllByCategoryIgnoreCase(String category);
-
-    Iterable<Expense> findAllBySubCategoryIgnoreCase(String subCategory);
+//    Iterable<Expense> findAllByCategoryIgnoreCase(String category);
+//
+//    Iterable<Expense> findAllBySubCategoryIgnoreCase(String subCategory);
 
     Iterable<Expense> findAllByPaymentModeIgnoreCase(String paymentMode);
 

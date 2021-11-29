@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import classnames from "classnames";
 import { FaRupeeSign } from "react-icons/fa";
 import { createExpense } from "../../actions/expenseActions";
+import { getCategories } from "../../actions/categoryActions";
+import axios from 'axios';
 import "./Expense.css";
 
 class AddExpense extends Component {
@@ -12,7 +14,7 @@ class AddExpense extends Component {
     this.state = {
       userId: "",
       expenseName: "",
-      category: "",
+      categories: [],
       subCategory: "",
       paymentDate: "",
       paymentMode: "",
@@ -21,6 +23,16 @@ class AddExpense extends Component {
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  componentDidMount(){
+    axios
+      .get("http://localhost:8080/finance/category/all")
+      .then(response => {
+        console.log(response.data);
+        this.setState({categories:response.data})
+      })
+      .catch(err => console.log(err));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -40,17 +52,19 @@ class AddExpense extends Component {
     const newExpense = {
       userId: this.state.userId,
       expenseName: this.state.expenseName,
-      category: this.state.category,
+      categories: this.state.categories,
       subCategory: this.state.subCategory,
       paymentDate: this.state.paymentDate,
       paymentMode: this.state.paymentMode,
       amount: this.state.amount,
     };
     this.props.createExpense(newExpense, this.props.history);
+    
   }
 
   render() {
     const { errors } = this.state;
+    const categoryList = this.state.categories;
     return (
       <div className="register">
         <div className="container">
@@ -97,7 +111,21 @@ class AddExpense extends Component {
                   )}
                 </div>
                 <div className="form-group col-lg-7 mx-auto">
-                  <input
+                  <select 
+                    name="category"
+                    placeholder="Select the Category"
+                    onChange={this.onChange}
+                    className={classnames("form-control form-control-lg", {
+                      "is-invalid": errors.category,
+                    })}
+                  >
+                    <option value="" disabled selected>Select the Category</option>
+                    {categoryList && categoryList.length > 0 && categoryList.map(category => 
+                      {
+                        return <option key={category.id} value={category.categoryName}>{category.categoryName}</option>
+                      })}
+                  </select>
+                  {/* <input
                     type="text"
                     placeholder="Enter the category"
                     name="category"
@@ -105,8 +133,8 @@ class AddExpense extends Component {
                       "is-invalid": errors.category,
                     })}
                     onChange={this.onChange}
-                    value={this.state.category}
-                  />
+                    value={this.state.category.categoryName}
+                  /> */}
                   {errors.category && (
                     <div className="invalid-feedback text-justify">
                       {errors.category}
@@ -210,6 +238,7 @@ class AddExpense extends Component {
 
 AddExpense.propTypes = {
     createExpense: PropTypes.func.isRequired,
+    getExpense: PropTypes.func.isRequired,
     errors:PropTypes.string.isRequired
 };
 

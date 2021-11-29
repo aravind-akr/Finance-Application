@@ -52,33 +52,33 @@ public class ExpenseService {
         }
     }
 
-    public Iterable<Expense> getAllExpensesByCategory(String category) {
-        if (category.isEmpty()) {
-            throw new CategoryException(category + "Not Found");
-        } else {
-            Iterable<Expense> allByCategory =
-                    expenseRepository.findAllByCategoryIgnoreCase(category);
-            if (allByCategory.spliterator().getExactSizeIfKnown() == 0
-                    || allByCategory.spliterator().getExactSizeIfKnown() == -1) {
-                throw new ExpenseException("No expenses found on " + category);
-            }
-            return allByCategory;
-        }
-    }
-
-    public Iterable<Expense> getAllExpensesBySubCategory(String subCategory) {
-        if (subCategory.isEmpty()) {
-            throw new CategoryException(subCategory + "Not Found");
-        } else {
-            Iterable<Expense> allBySubCategory =
-                    expenseRepository.findAllBySubCategoryIgnoreCase(subCategory);
-            if (allBySubCategory.spliterator().getExactSizeIfKnown() == 0
-                    || allBySubCategory.spliterator().getExactSizeIfKnown() == -1) {
-                throw new ExpenseException("No expenses found on " + subCategory);
-            }
-            return allBySubCategory;
-        }
-    }
+//    public Iterable<Expense> getAllExpensesByCategory(String category) {
+//        if (category.isEmpty()) {
+//            throw new CategoryException(category + "Not Found");
+//        } else {
+//            Iterable<Expense> allByCategory =
+//                    expenseRepository.findAllByCategoryIgnoreCase(category);
+//            if (allByCategory.spliterator().getExactSizeIfKnown() == 0
+//                    || allByCategory.spliterator().getExactSizeIfKnown() == -1) {
+//                throw new ExpenseException("No expenses found on " + category);
+//            }
+//            return allByCategory;
+//        }
+//    }
+//
+//    public Iterable<Expense> getAllExpensesBySubCategory(String subCategory) {
+//        if (subCategory.isEmpty()) {
+//            throw new CategoryException(subCategory + "Not Found");
+//        } else {
+//            Iterable<Expense> allBySubCategory =
+//                    expenseRepository.findAllBySubCategoryIgnoreCase(subCategory);
+//            if (allBySubCategory.spliterator().getExactSizeIfKnown() == 0
+//                    || allBySubCategory.spliterator().getExactSizeIfKnown() == -1) {
+//                throw new ExpenseException("No expenses found on " + subCategory);
+//            }
+//            return allBySubCategory;
+//        }
+//    }
 
     public Iterable<Expense> getAllExpensesByMode(String mode) {
         if (mode.isEmpty()) {
