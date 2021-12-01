@@ -1,5 +1,6 @@
 package com.aravind.finance.controller;
 
+import com.aravind.finance.models.CatSubCatModel;
 import com.aravind.finance.models.Category;
 import com.aravind.finance.models.SubCategory;
 import com.aravind.finance.services.CategoryService;
@@ -11,6 +12,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/finance")
@@ -60,9 +64,10 @@ public class CategoryController {
         return categoryService.getParentCategoryBySubCategory(subCategoryId);
     }
 
-    @GetMapping("/category/subCategory/{categoryId}")
-    public Iterable<SubCategory> getAllSubCategoriesByCategoryId(@PathVariable int categoryId){
-        return categoryService.getSubCategoryListForCategory(categoryId);
+    @GetMapping("/category/subCategory")
+    public ResponseEntity<Object> getAllSubCategoriesByCategoryId(){
+        Map<String, List<String>> subCategoriesByCategoryId = categoryService.getSubCategoriesByCategoryId();
+        return new ResponseEntity<Object>(subCategoriesByCategoryId, HttpStatus.OK);
     }
 
     @DeleteMapping("/category/delete/{categoryId}")

@@ -1,6 +1,7 @@
 package com.aravind.finance.services;
 
 import com.aravind.finance.exceptions.CategoryException;
+import com.aravind.finance.models.CatSubCatModel;
 import com.aravind.finance.models.Category;
 import com.aravind.finance.models.SubCategory;
 import com.aravind.finance.repositories.CategoryRepository;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -88,5 +91,12 @@ public class CategoryService {
             throw new CategoryException("Sub Category with ID " + subCategoryId + " Not Found");
         }
         subCategoryRepository.delete(subCategory);
+    }
+
+    public Map<String, List<String>> getSubCategoriesByCategoryId() {
+        List<CatSubCatModel> catSubCatModels = categoryRepository.categoriesWithSubCategory();
+        Map<String, List<String>> collect = catSubCatModels.stream().collect(Collectors.groupingBy(CatSubCatModel::getCategoryName,
+                Collectors.mapping(CatSubCatModel::getSubCategory, Collectors.toList())));
+        return collect;
     }
 }
