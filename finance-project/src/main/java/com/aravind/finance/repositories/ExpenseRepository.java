@@ -1,30 +1,29 @@
 package com.aravind.finance.repositories;
 
-import com.aravind.finance.models.ExpenseModel;
+import com.aravind.finance.models.Expense;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-public interface ExpenseRepository extends CrudRepository<ExpenseModel,Long> {
+public interface ExpenseRepository extends CrudRepository<Expense,Long> {
 
-    Iterable<ExpenseModel> findAllByUserId(String userId);
+    Iterable<Expense> findAllByUserId(String userId);
 
-    ExpenseModel findByUserId(String userId);
+    Expense findByUserId(String userId);
 
     long countByUserId(String userId);
 
-    Iterable<ExpenseModel> findAllByCategoryIgnoreCase(String category);
+//    Iterable<Expense> findAllByCategoryIgnoreCase(String category);
+//
+//    Iterable<Expense> findAllBySubCategoryIgnoreCase(String subCategory);
 
-    Iterable<ExpenseModel> findAllBySubCategoryIgnoreCase(String subCategory);
+    Iterable<Expense> findAllByPaymentModeIgnoreCase(String paymentMode);
 
-    Iterable<ExpenseModel> findAllByPaymentModeIgnoreCase(String paymentMode);
+    Expense findByExpenseId(int expenseId);
 
-    ExpenseModel findByExpenseId(int expenseId);
-
-    List<ExpenseModel> deleteAllByUserId(String userId);
+    List<Expense> deleteAllByUserId(String userId);
 
 
 

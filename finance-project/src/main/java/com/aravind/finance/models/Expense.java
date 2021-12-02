@@ -1,18 +1,18 @@
 package com.aravind.finance.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.ColumnTransformer;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-public class ExpenseModel {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Expense {
 
     @NotBlank(message = "user Id is required")
     private String userId;
@@ -24,10 +24,14 @@ public class ExpenseModel {
     @NotBlank(message = "Item Name is required")
     private String expenseName;
 
-    @NotBlank(message = "Item Category is required")
-    private String category;
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "category_id",referencedColumnName = "id")
+    private Category category;
 
-    private String subCategory;
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "sub_category_id",referencedColumnName = "id")
+    @JsonIgnore
+    private SubCategory subCategory;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date paymentDate;
@@ -38,7 +42,20 @@ public class ExpenseModel {
     @NotBlank(message = "Payment Mode is required")
     private String paymentMode;
 
-    public ExpenseModel(){}
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Column(updatable = false)
+    private Date createdAt;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date updatedAt;
+
+    @PrePersist
+    protected void onCreate() {this.createdAt = new Date();}
+
+    @PreUpdate
+    protected void onUpdate() {this.updatedAt = new Date();}
+
+    public Expense(){}
 
     public String getUserId() {
         return userId;
@@ -64,11 +81,11 @@ public class ExpenseModel {
         this.expenseName = expenseName;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
@@ -96,11 +113,11 @@ public class ExpenseModel {
         this.paymentMode = paymentMode;
     }
 
-    public String getSubCategory() {
+    public SubCategory getSubCategory() {
         return subCategory;
     }
 
-    public void setSubCategory(String subCategory) {
+    public void setSubCategory(SubCategory subCategory) {
         this.subCategory = subCategory;
     }
 }

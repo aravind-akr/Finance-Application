@@ -14,7 +14,6 @@ class ExpenseItem extends Component {
 
   render() {
     const { expense } = this.props;
-
     return (
       <div className="container">
         <div className="row expense-row">
@@ -24,9 +23,9 @@ class ExpenseItem extends Component {
           <div className="col-2">
             <span className="mx-auto">{expense.expenseName}</span>
           </div>
-          <div className="col-2">
-            <span className="mx-auto">{expense.category}</span>
-          </div>
+          {/* <div className="col-2">
+            <span className="mx-auto">{expense.category.categoryName}</span>
+          </div> */}
           <div className="col-2">
             <span className="mx-auto">{expense.paymentDate}</span>
           </div>

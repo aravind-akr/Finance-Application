@@ -4,16 +4,19 @@ import { connect } from "react-redux";
 import classnames from "classnames";
 import { FaRupeeSign } from "react-icons/fa";
 import { createExpense } from "../../actions/expenseActions";
+import { getSubCategories } from "../../actions/categoryActions";
 import "./Expense.css";
+import AddAnExpense from "./AddAnExpense";
 
 class AddExpense extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       userId: "",
       expenseName: "",
-      category: "",
-      subCategory: "",
+      categories: [],
+      category_id: "",
+      subCategories: [],
       paymentDate: "",
       paymentMode: "",
       amount: "",
@@ -23,9 +26,12 @@ class AddExpense extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
+  
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
-      this.setState({ errors: nextProps.errors });
+      this.setState({
+        errors: nextProps.errors,
+      });
     }
   }
 
@@ -40,8 +46,8 @@ class AddExpense extends Component {
     const newExpense = {
       userId: this.state.userId,
       expenseName: this.state.expenseName,
-      category: this.state.category,
-      subCategory: this.state.subCategory,
+      categories: this.state.categories,
+      subCategories: this.state.subCategories,
       paymentDate: this.state.paymentDate,
       paymentMode: this.state.paymentMode,
       amount: this.state.amount,
@@ -96,40 +102,7 @@ class AddExpense extends Component {
                     </div>
                   )}
                 </div>
-                <div className="form-group col-lg-7 mx-auto">
-                  <input
-                    type="text"
-                    placeholder="Enter the category"
-                    name="category"
-                    className={classnames("form-control form-control-lg", {
-                      "is-invalid": errors.category,
-                    })}
-                    onChange={this.onChange}
-                    value={this.state.category}
-                  />
-                  {errors.category && (
-                    <div className="invalid-feedback text-justify">
-                      {errors.category}
-                    </div>
-                  )}
-                </div>
-                <div className="form-group col-lg-7 mx-auto">
-                  <input
-                    type="text"
-                    placeholder="Enter the sub category"
-                    name="subCategory"
-                    className={classnames("form-control form-control-lg", {
-                      "is-invalid": errors.subCategory,
-                    })}
-                    onChange={this.onChange}
-                    value={this.state.subCategory}
-                  />
-                  {errors.subCategory && (
-                    <div className="invalid-feedback text-justify">
-                      {errors.subCategory}
-                    </div>
-                  )}
-                </div>
+                <AddAnExpense />
                 <div className="form-group col-lg-7 mx-auto">
                   <h5 className="text-start fw-bold font-sans-serif text-primary">
                     Enter the payment date
@@ -209,12 +182,16 @@ class AddExpense extends Component {
 }
 
 AddExpense.propTypes = {
-    createExpense: PropTypes.func.isRequired,
-    errors:PropTypes.string.isRequired
+  createExpense: PropTypes.func.isRequired,
+  getExpense: PropTypes.func.isRequired,
+  getSubCategories: PropTypes.func.isRequired,
+  errors: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-    errors:state.errors,
+  errors: state.errors,
 });
 
-export default connect(mapStateToProps, {createExpense})(AddExpense);
+export default connect(mapStateToProps, { getSubCategories, createExpense })(
+  AddExpense
+);
