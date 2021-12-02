@@ -41,7 +41,6 @@ function ExpenseDashboard(){
 
 ExpenseDashboard.propTypes = {
     expense: PropTypes.object.isRequired,
-    //getExpenses: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({

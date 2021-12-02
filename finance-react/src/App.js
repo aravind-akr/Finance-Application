@@ -6,7 +6,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./layout/Header";
 import ExpenseDashboard from "./pages/Expenses/ExpenseDashboard";
 import AddExpense from "./pages/Expenses/AddExpense";
-import AddAnExpense from "./pages/Expenses/AddAnExpense";
 import UpdateExpense from "./pages/Expenses/UpdateExpense";
 import "./App.css";
 
@@ -18,7 +17,7 @@ class App extends Component {
           <div className="App">
             <Header />
             <Route exact path="/expenses-dashboard" component={ExpenseDashboard}/>
-            <Route exact path="/addExpense" component={AddAnExpense}/>
+            <Route exact path="/addExpense" component={AddExpense}/>
             <Route exact path="/updateExpense/:expenseId" component={UpdateExpense}/>
           </div>
         </Router>

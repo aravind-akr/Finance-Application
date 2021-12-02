@@ -12,9 +12,9 @@ class ExpenseTableOutline extends Component {
           <div className="col-2 row-head-border">
             <span className="mx-auto">Item Name</span>
           </div>
-          <div className="col-2 row-head-border">
+          {/* <div className="col-2 row-head-border">
             <span className="mx-auto">category</span>
-          </div>
+          </div> */}
           <div className="col-2 row-head-border">
             <span className="mx-auto">Date</span>
           </div>

@@ -5,8 +5,8 @@ import classnames from "classnames";
 import { FaRupeeSign } from "react-icons/fa";
 import { createExpense } from "../../actions/expenseActions";
 import { getSubCategories } from "../../actions/categoryActions";
-import axios from "axios";
 import "./Expense.css";
+import AddAnExpense from "./AddAnExpense";
 
 class AddExpense extends Component {
   constructor(props) {
@@ -23,50 +23,10 @@ class AddExpense extends Component {
       errors: {},
     };
     this.onChange = this.onChange.bind(this);
-    this.onCategoryChange = this.onCategoryChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  // eslint-disable-next-line no-dupe-class-members
-  async componentDidMount() {
-    axios
-      .get("http://localhost:8080/finance/category/all")
-      .then((response) => {
-        console.log(response.data);
-        this.setState({ categories: response.data });
-      })
-      .catch((err) => console.log(err));
-   // this.props.getSubCategories(this.state.category_id);
-  }
-
-  // // eslint-disable-next-line no-dupe-class-members
-  // async componentDidMount() {
-  //   axios
-  //     .get("http://localhost:8080/finance/subCategory/all")
-  //     .then((response) => {
-  //       console.log(response.data);
-  //       this.setState({ subCategories: response.data });
-  //     })
-  //     .catch((err) => console.log(err));
-  // }
-
-  // // eslint-disable-next-line no-dupe-class-members
-  // async componentDidMount(){
-  //   Promise.all([
-  //     fetch("http://localhost:8080/finance/category/all").then(response => response.json()),
-  //     fetch("http://localhost:8080/finance/category/subCategory/"+this.state.category_id).then(response => response.json())
-  //   ]).then(([categories,subCategories]) => {
-  //     this.setState({
-  //       categories:categories,
-  //       subCategories:subCategories
-  //   })
-  //   console.log(categories);
-  //   console.log(subCategories);
-  //     })};
-
-  //   }
-  //   // catch((err) => console.log(err))
-
+  
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({
@@ -78,13 +38,6 @@ class AddExpense extends Component {
   onChange(e) {
     this.setState({
       [e.target.name]: e.target.value,
-    });
-  }
-
-  onCategoryChange(e) {
-    const index = e.target.selectedIndex;
-    this.setState({
-      category_id: e.target.selectedIndex,
     });
   }
 
@@ -104,8 +57,6 @@ class AddExpense extends Component {
 
   render() {
     const { errors } = this.state;
-    const categoryList = this.state.categories;
-    const subCategoryList = this.state.subCategories;
     return (
       <div className="register">
         <div className="container">
@@ -151,88 +102,7 @@ class AddExpense extends Component {
                     </div>
                   )}
                 </div>
-                <div className="form-group col-lg-7 mx-auto">
-                  <select
-                    name="category"
-                    placeholder="Select the Category"
-                    onChange={this.onCategoryChange}
-                    className={classnames("form-control form-control-lg", {
-                      "is-invalid": errors.category,
-                    })}
-                  >
-                    <option value="" disabled selected>
-                      Select the Category
-                    </option>
-                    {categoryList &&
-                      categoryList.length > 0 &&
-                      categoryList.map((category) => {
-                        return (
-                          <option
-                            key={category.id}
-                            value={category.categoryName}
-                          >
-                            {category.categoryName}
-                          </option>
-                        );
-                      })}
-                  </select>
-                  {/* <input
-                    type="text"
-                    placeholder="Enter the category"
-                    name="category"
-                    className={classnames("form-control form-control-lg", {
-                      "is-invalid": errors.category,
-                    })}
-                    onChange={this.onChange}
-                    value={this.state.category.categoryName}
-                  /> */}
-                  {errors.category && (
-                    <div className="invalid-feedback text-justify">
-                      {errors.category}
-                    </div>
-                  )}
-                </div>
-                <div className="form-group col-lg-7 mx-auto">
-                  <select
-                    name="subCategory"
-                    placeholder="Select the Sub Category"
-                    onChange={this.onChange}
-                    className={classnames("form-control form-control-lg", {
-                      "is-invalid": errors.subCategory,
-                    })}
-                  >
-                    <option value="" disabled selected>
-                      Select the Sub Category
-                    </option>
-                    {subCategoryList &&
-                      subCategoryList.length > 0 &&
-                      subCategoryList.map((subCategory) => {
-                        return (
-                          <option
-                            key={subCategory.id}
-                            value={subCategory.subCategory}
-                          >
-                            {subCategory.subCategory}
-                          </option>
-                        );
-                      })}
-                  </select>
-                  {/* <input
-                    type="text"
-                    placeholder="Select the sub category"
-                    name="subCategory"
-                    className={classnames("form-control form-control-lg", {
-                      "is-invalid": errors.subCategory,
-                    })}
-                    onChange={this.onChange}
-                    value={this.state.subCategory}
-                  /> */}
-                  {errors.subCategory && (
-                    <div className="invalid-feedback text-justify">
-                      {errors.subCategory}
-                    </div>
-                  )}
-                </div>
+                <AddAnExpense />
                 <div className="form-group col-lg-7 mx-auto">
                   <h5 className="text-start fw-bold font-sans-serif text-primary">
                     Enter the payment date

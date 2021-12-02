@@ -1,4 +1,4 @@
-import {GET_EXPENSES, GET_EXPENSE, DELETE_EXPENSE, GET_CATEGORIES} from "../actions/types";
+import {GET_EXPENSES, GET_EXPENSE, DELETE_EXPENSE} from "../actions/types";
 
 const initialState = {
     expenses:[],
