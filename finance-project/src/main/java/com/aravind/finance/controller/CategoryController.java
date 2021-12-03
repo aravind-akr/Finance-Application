@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +34,10 @@ public class CategoryController {
         if(errorMap!=null) return errorMap;
 
         Category category1 = categoryService.saveOrUpdateCategory(category);
-        return new ResponseEntity<>(category1, HttpStatus.CREATED);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .replacePath("/finance/category/get/{categoryId}")
+                .buildAndExpand(category1.getId()).toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @PostMapping("/category/{categoryId}/subCategory/add")
@@ -42,7 +47,10 @@ public class CategoryController {
         if(errorMap!=null) return errorMap;
 
         SubCategory subCategory1 = categoryService.saveOrUpdateSubCategory(subCategory, categoryId);
-        return new ResponseEntity<>(subCategory1, HttpStatus.CREATED);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .replacePath("/finance/subCategory/get/{subCategoryId}")
+                .buildAndExpand(subCategory1.getId()).toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/category/all")
@@ -50,12 +58,22 @@ public class CategoryController {
         return categoryService.findAllCategories();
     }
 
+    @GetMapping("/category/get/{categoryId}")
+    public Category getCategoryByID(@PathVariable int categoryId){
+        return categoryService.getCategoryByCategoryId(categoryId);
+    }
+
+    @GetMapping("/subCategory/get/{subCategoryId}")
+    public SubCategory getSubCategoryByID(@PathVariable int subCategoryId){
+        return categoryService.getSubCategoryBySubCategoryId(subCategoryId);
+    }
+
     @GetMapping("/subCategory/all")
     public Iterable<SubCategory> getAllSubCategories(){
         return categoryService.findAllSubCategories();
     }
 
-    @GetMapping("/subCategory/get/{subCategoryId}")
+    @GetMapping("/subCategory/getCategory/{subCategoryId}")
     public String getParentCategoryBySubCategory(@PathVariable int subCategoryId){
         return categoryService.getParentCategoryBySubCategory(subCategoryId);
     }

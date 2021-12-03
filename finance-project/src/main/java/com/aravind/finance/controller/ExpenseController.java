@@ -11,11 +11,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -39,7 +41,10 @@ public class ExpenseController {
         if(errorMap!=null) return errorMap;
 
         Expense expense1 = expenseService.saveOrUpdateExpense(expense);
-        return new ResponseEntity<>(expense1, HttpStatus.CREATED);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().
+                replacePath("/finance/expenses/get/{expenseId}")
+                .buildAndExpand(expense1.getExpenseId()).toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/user-expense/{userId}")

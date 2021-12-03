@@ -98,4 +98,21 @@ public class CategoryService {
                 Collectors.mapping(CatSubCatModel::getSubCategory, Collectors.toList())));
         return collect;
     }
+
+    public Category getCategoryByCategoryId(int categoryId) {
+        Category category = categoryRepository.findById(categoryId);
+        if(category == null){
+            throw new CategoryException("Category with ID " + categoryId + " Does not Exist");
+        }
+        return category;
+    }
+
+
+    public SubCategory getSubCategoryBySubCategoryId(int subCategoryId) {
+        SubCategory subCategory = subCategoryRepository.findById(subCategoryId);
+        if(subCategory == null){
+            throw new CategoryException("Category with ID " + subCategoryId + " Does not Exist");
+        }
+        return subCategory;
+    }
 }
