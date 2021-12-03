@@ -4,9 +4,11 @@ import com.aravind.finance.models.Expense;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
+@Transactional
 public interface ExpenseRepository extends CrudRepository<Expense,Long> {
 
     Iterable<Expense> findAllByUserId(String userId);
@@ -15,16 +17,10 @@ public interface ExpenseRepository extends CrudRepository<Expense,Long> {
 
     long countByUserId(String userId);
 
-//    Iterable<Expense> findAllByCategoryIgnoreCase(String category);
-//
-//    Iterable<Expense> findAllBySubCategoryIgnoreCase(String subCategory);
-
     Iterable<Expense> findAllByPaymentModeIgnoreCase(String paymentMode);
 
     Expense findByExpenseId(int expenseId);
 
     List<Expense> deleteAllByUserId(String userId);
-
-
 
 }

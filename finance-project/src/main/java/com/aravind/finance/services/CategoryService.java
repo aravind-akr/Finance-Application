@@ -38,7 +38,6 @@ public class CategoryService {
     }
 
     public SubCategory saveOrUpdateSubCategory(SubCategory subCategory, int categoryId){
-
         try{
             Category category = categoryRepository.findById(categoryId);
             if(category == null){
