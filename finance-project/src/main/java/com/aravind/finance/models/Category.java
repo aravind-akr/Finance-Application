@@ -2,6 +2,8 @@ package com.aravind.finance.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
@@ -15,14 +17,14 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    public int id;
+    @Getter @Setter private int id;
 
     @NotBlank(message = "Category is a must")
-    private String categoryName;
+    @Getter @Setter private String categoryName;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "category", orphanRemoval = true)
     @JsonIgnore
-    private List<SubCategory> subCategories = new ArrayList<>();
+    @Getter @Setter private List<SubCategory> subCategories = new ArrayList<>();
 
     @OneToOne(mappedBy="category", cascade = CascadeType.ALL)
     private Expense expense;
@@ -40,30 +42,6 @@ public class Category {
 
     @PreUpdate
     protected void onUpdate() {this.updatedAt = new Date();}
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public List<SubCategory> getSubCategories() {
-        return subCategories;
-    }
-
-    public void setSubCategories(List<SubCategory> subCategories) {
-        this.subCategories = subCategories;
-    }
 
     public void addSubCategory(SubCategory subCategory) {
         subCategories.add(subCategory);

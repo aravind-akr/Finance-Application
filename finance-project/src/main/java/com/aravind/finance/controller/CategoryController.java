@@ -1,6 +1,5 @@
 package com.aravind.finance.controller;
 
-import com.aravind.finance.models.CatSubCatModel;
 import com.aravind.finance.models.Category;
 import com.aravind.finance.models.SubCategory;
 import com.aravind.finance.services.CategoryService;
@@ -12,7 +11,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +33,6 @@ public class CategoryController {
 
         Category category1 = categoryService.saveOrUpdateCategory(category);
         return new ResponseEntity<>(category1, HttpStatus.CREATED);
-
     }
 
     @PostMapping("/category/{categoryId}/subCategory/add")
@@ -46,7 +43,6 @@ public class CategoryController {
 
         SubCategory subCategory1 = categoryService.saveOrUpdateSubCategory(subCategory, categoryId);
         return new ResponseEntity<>(subCategory1, HttpStatus.CREATED);
-
     }
 
     @GetMapping("/category/all")
@@ -81,6 +77,4 @@ public class CategoryController {
         categoryService.deleteSubCategoryByID(subCategoryId);
         return new ResponseEntity<>("Sub Category with ID: "+subCategoryId+" is deleted", HttpStatus.OK);
     }
-
-
 }

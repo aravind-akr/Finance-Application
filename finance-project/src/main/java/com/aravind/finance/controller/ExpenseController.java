@@ -77,16 +77,6 @@ public class ExpenseController {
     public Iterable<Expense> getAllExpensesOfUser(@PathVariable String userId){
         return expenseService.getAllExpensesOfUser(userId);
     }
-    
-//    @GetMapping("/category-expense/{category}")
-//    public Iterable<Expense> getAllExpensesByCategory(@PathVariable String category){
-//        return expenseService.getAllExpensesByCategory(category);
-//    }
-//
-//    @GetMapping("/subCategory-expense/{subCategory}")
-//    public Iterable<Expense> getAllExpensesBySubCategory(@PathVariable String subCategory){
-//        return expenseService.getAllExpensesBySubCategory(subCategory);
-//    }
 
     @GetMapping("/mode-expense/{mode}")
     public Iterable<Expense> getAllExpensesByPaymentMode(@PathVariable String mode){
