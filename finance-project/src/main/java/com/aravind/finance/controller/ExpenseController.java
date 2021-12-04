@@ -1,7 +1,7 @@
 package com.aravind.finance.controller;
 
 import com.aravind.finance.exceptions.ExpenseException;
-import com.aravind.finance.exceptions.UserIdException;
+import com.aravind.finance.exceptions.UserException;
 import com.aravind.finance.models.Expense;
 import com.aravind.finance.repositories.ExpenseRepository;
 import com.aravind.finance.services.MapValidationErrorService;
@@ -53,7 +53,7 @@ public class ExpenseController {
         RedirectView view = new RedirectView();
         view.setContextRelative(true);
         if(userCount==0){
-            throw new UserIdException(userId+" Not Found");
+            throw new UserException(userId+" Not Found");
         }
         else if(userCount==1){
             view.setUrl("/finance/expenses/user-single-expense/"+userId);

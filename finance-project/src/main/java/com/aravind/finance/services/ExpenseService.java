@@ -1,8 +1,8 @@
 package com.aravind.finance.services;
 
 import com.aravind.finance.exceptions.ExpenseException;
-import com.aravind.finance.exceptions.ModeExcpetion;
-import com.aravind.finance.exceptions.UserIdException;
+import com.aravind.finance.exceptions.ModeException;
+import com.aravind.finance.exceptions.UserException;
 import com.aravind.finance.models.Expense;
 import com.aravind.finance.repositories.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class ExpenseService {
 
     public Expense getSingleExpenseOfUser(String userId) {
         if (userId.isEmpty()) {
-            throw new UserIdException(userId + " Does not exist");
+            throw new UserException(userId + " Does not exist");
         } else {
             Expense expense = expenseRepository.findByUserId(userId);
             if (expense == null)
@@ -39,7 +39,7 @@ public class ExpenseService {
 
     public Iterable<Expense> getAllExpensesOfUser(String userId) {
         if (userId.isEmpty()) {
-            throw new UserIdException(userId + " Does not exist");
+            throw new UserException(userId + " Does not exist");
         } else {
             Iterable<Expense> allByUserId =
                     expenseRepository.findAllByUserId(userId);
@@ -53,7 +53,7 @@ public class ExpenseService {
 
     public Iterable<Expense> getAllExpensesByMode(String mode) {
         if (mode.isEmpty()) {
-            throw new ModeExcpetion(mode + "Not Found");
+            throw new ModeException(mode + "Not Found");
         } else {
             Iterable<Expense> allByPaymentMode =
                     expenseRepository.findAllByPaymentModeIgnoreCase(mode);
