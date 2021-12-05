@@ -17,6 +17,6 @@ public interface SubCategoryRepository extends CrudRepository<SubCategory, Long>
     SubCategory findById(int id);
 
     @Override
-    Iterable<SubCategory> findAll();
+    List<SubCategory> findAll();
 
 }

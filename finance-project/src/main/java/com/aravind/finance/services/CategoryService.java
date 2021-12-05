@@ -56,7 +56,7 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
-    public Iterable<SubCategory> findAllSubCategories(){
+    public List<SubCategory> findAllSubCategories(){
         return subCategoryRepository.findAll();
     }
 
@@ -67,8 +67,8 @@ public class CategoryService {
         return categoryName;
     }
 
-    public Iterable<SubCategory> getSubCategoryListForCategory(int categoryId){
-        Iterable<SubCategory> subCategories;
+    public List<SubCategory> getSubCategoryListForCategory(int categoryId){
+        List<SubCategory> subCategories;
         Session session = sessionFactory.openSession();
         Query query = session.createQuery("select s from Category c join c.subCategories s where c.id=:id");
         query.setParameter("id",categoryId);

@@ -1,12 +1,16 @@
 package com.aravind.finance.controller;
 
 import com.aravind.finance.exceptions.ExpenseException;
-import com.aravind.finance.exceptions.UserIdException;
+import com.aravind.finance.exceptions.UserException;
 import com.aravind.finance.models.Expense;
 import com.aravind.finance.repositories.ExpenseRepository;
 import com.aravind.finance.services.MapValidationErrorService;
 import com.aravind.finance.services.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -19,6 +23,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/finance/expenses")
@@ -53,7 +58,7 @@ public class ExpenseController {
         RedirectView view = new RedirectView();
         view.setContextRelative(true);
         if(userCount==0){
-            throw new UserIdException(userId+" Not Found");
+            throw new UserException(userId+" Not Found");
         }
         else if(userCount==1){
             view.setUrl("/finance/expenses/user-single-expense/"+userId);
@@ -70,31 +75,59 @@ public class ExpenseController {
      * @return
      */
     @GetMapping("/user-single-expense/{userId}")
-    public ResponseEntity<?> getSingleExpensesOfUser(@PathVariable String userId){
+    public EntityModel<Expense> getSingleExpensesOfUser(@PathVariable String userId){
         Expense expense = expenseService.getSingleExpenseOfUser(userId);
-        return new ResponseEntity<>(expense,HttpStatus.OK);
+        EntityModel<Expense> entityModel = EntityModel.of(expense);
+        entityModel.add(linkTo(methodOn(this.getClass()).getExpenseById(expense.getExpenseId())).withRel("expense-details"));
+        entityModel.add(linkTo(methodOn(this.getClass()).getAllExpensesOfUser(userId)).withRel("user-expenses"));
+        entityModel.add(linkTo(methodOn(this.getClass()).getAllExpensesByPaymentMode(expense.getPaymentMode())).withRel("expenses-by-payment"));
+        entityModel.add(linkTo(methodOn(this.getClass()).deleteExpenseById(expense.getExpenseId())).withRel("delete-expense"));
+        entityModel.add(linkTo(methodOn(this.getClass()).deleteUserExpenses(userId)).withRel("delete-user-expenses"));
+        return entityModel;
     }
 
     /**
      * If the userId has more than one purchases
+     * @return
      */
     @GetMapping("/user-expenses/{userId}")
-    public Iterable<Expense> getAllExpensesOfUser(@PathVariable String userId){
-        return expenseService.getAllExpensesOfUser(userId);
+    public CollectionModel<EntityModel<Expense>> getAllExpensesOfUser(@PathVariable String userId){
+        List<Expense> allExpensesOfUser = expenseService.getAllExpensesOfUser(userId);
+        List<EntityModel<Expense>> collect = allExpensesOfUser.stream().map(expense ->
+                EntityModel.of(expense,
+                        linkTo(methodOn(this.getClass()).getExpenseById(expense.getExpenseId())).withRel("expense-details"),
+                        linkTo(methodOn(this.getClass()).getAllExpensesByPaymentMode(expense.getPaymentMode())).withRel("expenses-by-mode"),
+                        linkTo(methodOn(this.getClass()).deleteExpenseById(expense.getExpenseId())).withRel("delete-expense"),
+                        linkTo(methodOn(this.getClass()).deleteUserExpenses(expense.getUserId())).withRel("delete-user-expenses")
+                )).collect(Collectors.toList());
+        return CollectionModel.of(collect);
     }
 
     @GetMapping("/mode-expense/{mode}")
-    public Iterable<Expense> getAllExpensesByPaymentMode(@PathVariable String mode){
-        return expenseService.getAllExpensesByMode(mode);
+    public CollectionModel<EntityModel<Expense>> getAllExpensesByPaymentMode(@PathVariable String mode){
+        List<Expense> allExpensesByMode = expenseService.getAllExpensesByMode(mode);
+        List<EntityModel<Expense>> collect = allExpensesByMode.stream().map(expense ->
+                EntityModel.of(expense,
+                        linkTo(methodOn(this.getClass()).getExpenseById(expense.getExpenseId())).withRel("expense-details"),
+                        linkTo(methodOn(this.getClass()).getAllExpensesOfUser(expense.getUserId())).withRel("user-expenses"),
+                        linkTo(methodOn(this.getClass()).deleteExpenseById(expense.getExpenseId())).withRel("delete-expense"),
+                        linkTo(methodOn(this.getClass()).deleteUserExpenses(expense.getUserId())).withRel("delete-user-expenses")
+                )).collect(Collectors.toList());
+        return CollectionModel.of(collect);
     }
 
     @GetMapping("/get/{expenseId}")
-    public Expense getExpenseById(@PathVariable int expenseId){
-        Expense expenseByID = expenseService.getExpenseByID(expenseId);
-        if(expenseByID == null){
+    public EntityModel<Expense> getExpenseById(@PathVariable int expenseId){
+        Expense expense = expenseService.getExpenseByID(expenseId);
+        if(expense == null){
             throw new ExpenseException("No expenses found");
         }
-        return expenseByID;
+        EntityModel<Expense> entityModel = EntityModel.of(expense);
+        entityModel.add(linkTo(methodOn(this.getClass()).getAllExpensesOfUser(expense.getUserId())).withRel("user-expenses"));
+        entityModel.add(linkTo(methodOn(this.getClass()).getAllExpensesByPaymentMode(expense.getPaymentMode())).withRel("expenses-by-payment"));
+        entityModel.add(linkTo(methodOn(this.getClass()).deleteExpenseById(expense.getExpenseId())).withRel("delete-expense"));
+        entityModel.add(linkTo(methodOn(this.getClass()).deleteUserExpenses(expense.getUserId())).withRel("delete-user-expenses"));
+        return entityModel;
     }
 
     //Delete the expense with its id
