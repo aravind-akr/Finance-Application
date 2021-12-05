@@ -5,6 +5,10 @@ import com.aravind.finance.models.SubCategory;
 import com.aravind.finance.services.CategoryService;
 import com.aravind.finance.services.MapValidationErrorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -15,6 +19,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/finance")
@@ -59,18 +64,36 @@ public class CategoryController {
     }
 
     @GetMapping("/category/get/{categoryId}")
-    public Category getCategoryByID(@PathVariable int categoryId){
-        return categoryService.getCategoryByCategoryId(categoryId);
+    public EntityModel<Category> getCategoryByID(@PathVariable int categoryId){
+        Category category = categoryService.getCategoryByCategoryId(categoryId);
+        EntityModel<Category> entityModel = EntityModel.of(category);
+        entityModel.add(linkTo(methodOn(this.getClass()).getAllCategories()).withRel("all-categories"));
+        entityModel.add(linkTo(methodOn(this.getClass()).getAllSubCategories()).withRel("all-sub-categories"));
+        entityModel.add(linkTo(methodOn(this.getClass()).getAllSubCategoriesByCategoryId()).withRel("sub-category-list"));
+        entityModel.add(linkTo(methodOn(this.getClass()).deleteCategoryByID(categoryId)).withRel("delete-category"));
+        return entityModel;
     }
 
     @GetMapping("/subCategory/get/{subCategoryId}")
-    public SubCategory getSubCategoryByID(@PathVariable int subCategoryId){
-        return categoryService.getSubCategoryBySubCategoryId(subCategoryId);
+    public EntityModel<SubCategory> getSubCategoryByID(@PathVariable int subCategoryId){
+        SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(subCategoryId);
+        EntityModel<SubCategory> entityModel = EntityModel.of(subCategory);
+        entityModel.add(linkTo(methodOn(this.getClass()).getAllSubCategories()).withRel("all-sub-categories"));
+        entityModel.add(linkTo(methodOn(this.getClass()).getAllSubCategoriesByCategoryId()).withRel("sub-category-list"));
+        entityModel.add(linkTo(methodOn(this.getClass()).deleteSubCategoryByID(subCategoryId)).withRel("delete-sub-category"));
+        return entityModel;
     }
 
     @GetMapping("/subCategory/all")
-    public Iterable<SubCategory> getAllSubCategories(){
-        return categoryService.findAllSubCategories();
+    public CollectionModel<EntityModel<SubCategory>> getAllSubCategories(){
+        List<SubCategory> subCategories = categoryService.findAllSubCategories();
+        List<EntityModel<SubCategory>> entityModel = subCategories.stream().map(subCategory->
+                EntityModel.of(subCategory,
+                        linkTo(methodOn(this.getClass()).getAllSubCategoriesByCategoryId()).withRel("sub-category-list"),
+                        linkTo(methodOn(this.getClass()).getSubCategoryByID(subCategory.getId())).withRel("sub-category-details"),
+                        linkTo(methodOn(this.getClass()).deleteSubCategoryByID(subCategory.getId())).withRel("delete-sub-category")
+                        )).collect(Collectors.toList());
+        return CollectionModel.of(entityModel);
     }
 
     @GetMapping("/subCategory/getCategory/{subCategoryId}")

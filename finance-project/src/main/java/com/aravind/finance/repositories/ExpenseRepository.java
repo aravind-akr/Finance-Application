@@ -11,13 +11,13 @@ import java.util.List;
 @Transactional
 public interface ExpenseRepository extends CrudRepository<Expense,Long> {
 
-    Iterable<Expense> findAllByUserId(String userId);
+    List<Expense> findAllByUserId(String userId);
 
     Expense findByUserId(String userId);
 
     long countByUserId(String userId);
 
-    Iterable<Expense> findAllByPaymentModeIgnoreCase(String paymentMode);
+    List<Expense> findAllByPaymentModeIgnoreCase(String paymentMode);
 
     Expense findByExpenseId(int expenseId);
 

@@ -37,11 +37,11 @@ public class ExpenseService {
         }
     }
 
-    public Iterable<Expense> getAllExpensesOfUser(String userId) {
+    public List<Expense> getAllExpensesOfUser(String userId) {
         if (userId.isEmpty()) {
             throw new UserException(userId + " Does not exist");
         } else {
-            Iterable<Expense> allByUserId =
+            List<Expense> allByUserId =
                     expenseRepository.findAllByUserId(userId);
             if (allByUserId.spliterator().getExactSizeIfKnown() == 0
                     || allByUserId.spliterator().getExactSizeIfKnown() == -1) {
@@ -51,11 +51,11 @@ public class ExpenseService {
         }
     }
 
-    public Iterable<Expense> getAllExpensesByMode(String mode) {
+    public List<Expense> getAllExpensesByMode(String mode) {
         if (mode.isEmpty()) {
             throw new ModeException(mode + "Not Found");
         } else {
-            Iterable<Expense> allByPaymentMode =
+            List<Expense> allByPaymentMode =
                     expenseRepository.findAllByPaymentModeIgnoreCase(mode);
             if (allByPaymentMode.spliterator().getExactSizeIfKnown() == 0
                     || allByPaymentMode.spliterator().getExactSizeIfKnown() == -1) {
