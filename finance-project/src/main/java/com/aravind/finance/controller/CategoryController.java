@@ -4,6 +4,7 @@ import com.aravind.finance.models.Category;
 import com.aravind.finance.models.SubCategory;
 import com.aravind.finance.services.CategoryService;
 import com.aravind.finance.services.MapValidationErrorService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/finance")
 @CrossOrigin
+@Slf4j
 public class CategoryController {
 
     @Autowired
@@ -35,6 +37,7 @@ public class CategoryController {
     @PostMapping("/category/add")
     public ResponseEntity<?> createNewCategory(@Valid @RequestBody Category category,
                                                BindingResult result){
+        log.info("Triggering POST Category Method");
         ResponseEntity<?> errorMap = errorService.mapValidationErrorService(result);
         if(errorMap!=null) return errorMap;
 
@@ -48,6 +51,7 @@ public class CategoryController {
     @PostMapping("/category/{categoryId}/subCategory/add")
     public ResponseEntity<?> createNewSubCategory(@Valid @RequestBody SubCategory subCategory,
                                                BindingResult result, @PathVariable int categoryId){
+        log.info("Triggering POST Sub Category Method");
         ResponseEntity<?> errorMap = errorService.mapValidationErrorService(result);
         if(errorMap!=null) return errorMap;
 
@@ -65,6 +69,7 @@ public class CategoryController {
 
     @GetMapping("/category/get/{categoryId}")
     public EntityModel<Category> getCategoryByID(@PathVariable int categoryId){
+        log.info("Getting the category details by an ID");
         Category category = categoryService.getCategoryByCategoryId(categoryId);
         EntityModel<Category> entityModel = EntityModel.of(category);
         entityModel.add(linkTo(methodOn(this.getClass()).getAllCategories()).withRel("all-categories"));
@@ -76,6 +81,7 @@ public class CategoryController {
 
     @GetMapping("/subCategory/get/{subCategoryId}")
     public EntityModel<SubCategory> getSubCategoryByID(@PathVariable int subCategoryId){
+        log.info("Getting the sub category details by an ID");
         SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(subCategoryId);
         EntityModel<SubCategory> entityModel = EntityModel.of(subCategory);
         entityModel.add(linkTo(methodOn(this.getClass()).getAllSubCategories()).withRel("all-sub-categories"));
@@ -86,6 +92,7 @@ public class CategoryController {
 
     @GetMapping("/subCategory/all")
     public CollectionModel<EntityModel<SubCategory>> getAllSubCategories(){
+        log.info("Getting all the sub-categories details");
         List<SubCategory> subCategories = categoryService.findAllSubCategories();
         List<EntityModel<SubCategory>> entityModel = subCategories.stream().map(subCategory->
                 EntityModel.of(subCategory,
@@ -98,23 +105,27 @@ public class CategoryController {
 
     @GetMapping("/subCategory/getCategory/{subCategoryId}")
     public String getParentCategoryBySubCategory(@PathVariable int subCategoryId){
+        log.info("Getting the Parent category details by the sub category ID");
         return categoryService.getParentCategoryBySubCategory(subCategoryId);
     }
 
     @GetMapping("/category/subCategory")
     public ResponseEntity<Object> getAllSubCategoriesByCategoryId(){
+        log.info("Getting the sub category mapping with category");
         Map<String, List<String>> subCategoriesByCategoryId = categoryService.getSubCategoriesByCategoryId();
-        return new ResponseEntity<Object>(subCategoriesByCategoryId, HttpStatus.OK);
+        return new ResponseEntity<>(subCategoriesByCategoryId, HttpStatus.OK);
     }
 
     @DeleteMapping("/category/delete/{categoryId}")
     public ResponseEntity<?> deleteCategoryByID(@PathVariable int categoryId){
+        log.info("Deleting the category details by an ID");
         categoryService.deleteCategoryByID(categoryId);
         return new ResponseEntity<>("Category with ID: "+categoryId+" is deleted", HttpStatus.OK);
     }
 
     @DeleteMapping("/subCategory/delete/{subCategoryId}")
     public ResponseEntity<?> deleteSubCategoryByID(@PathVariable int subCategoryId){
+        log.info("Deleting the sub category details by an ID");
         categoryService.deleteSubCategoryByID(subCategoryId);
         return new ResponseEntity<>("Sub Category with ID: "+subCategoryId+" is deleted", HttpStatus.OK);
     }
