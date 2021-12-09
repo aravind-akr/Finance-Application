@@ -65,23 +65,23 @@ public class ExpenseService {
         }
     }
 
-    public List<Expense> getAllExpensesByMode(String mode) {
-        log.info("Inside getAllExpensesByMode method");
-        if (mode.isEmpty()) {
-            log.warn(mode+" not found");
-            throw new ModeException(mode + "Not Found");
-        } else {
-            List<Expense> allByPaymentMode =
-                    expenseRepository.findAllByPaymentModeIgnoreCase(mode);
-            if (allByPaymentMode.spliterator().getExactSizeIfKnown() == 0
-                    || allByPaymentMode.spliterator().getExactSizeIfKnown() == -1) {
-                log.debug("No expenses found on " + mode + " found");
-                throw new ExpenseException("No expenses found on " + mode);
-            }
-            log.info("The list of expenses on" + mode +" mode are " + allByPaymentMode);
-            return allByPaymentMode;
-        }
-    }
+//    public List<Expense> getAllExpensesByMode(String mode) {
+//        log.info("Inside getAllExpensesByMode method");
+//        if (mode.isEmpty()) {
+//            log.warn(mode+" not found");
+//            throw new ModeException(mode + "Not Found");
+//        } else {
+//            List<Expense> allByPaymentMode =
+//                    expenseRepository.findAllByPaymentModeIgnoreCase(mode);
+//            if (allByPaymentMode.spliterator().getExactSizeIfKnown() == 0
+//                    || allByPaymentMode.spliterator().getExactSizeIfKnown() == -1) {
+//                log.debug("No expenses found on " + mode + " found");
+//                throw new ExpenseException("No expenses found on " + mode);
+//            }
+//            log.info("The list of expenses on" + mode +" mode are " + allByPaymentMode);
+//            return allByPaymentMode;
+//        }
+//    }
     public Expense getExpenseByID(int expenseId){
         log.info("Inside getExpenseByID method");
         Expense expense = expenseRepository.findByExpenseId(expenseId);

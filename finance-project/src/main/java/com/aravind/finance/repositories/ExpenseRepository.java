@@ -17,7 +17,7 @@ public interface ExpenseRepository extends CrudRepository<Expense,Long> {
 
     long countByUserId(String userId);
 
-    List<Expense> findAllByPaymentModeIgnoreCase(String paymentMode);
+    //List<Expense> findAllByPaymentModeIgnoreCase(String paymentMode);
 
     Expense findByExpenseId(int expenseId);
 

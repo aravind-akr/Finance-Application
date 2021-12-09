@@ -46,8 +46,10 @@ public class Expense {
     @NotNull(message = "Price is required")
     private Double amount;
 
-    @NotBlank(message = "Payment Mode is required")
-    private String paymentMode;
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name="paymentMode_id",referencedColumnName = "id")
+    @JsonIgnoreProperties(value = {"createdAt","updatedAt"})
+    private Mode paymentMode;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(updatable = false)

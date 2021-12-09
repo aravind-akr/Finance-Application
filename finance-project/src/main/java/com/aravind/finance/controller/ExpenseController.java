@@ -88,7 +88,7 @@ public class ExpenseController {
         EntityModel<Expense> entityModel = EntityModel.of(expense);
         entityModel.add(linkTo(methodOn(this.getClass()).getExpenseById(expense.getExpenseId())).withRel("expense-details"));
         entityModel.add(linkTo(methodOn(this.getClass()).getAllExpensesOfUser(userId)).withRel("user-expenses"));
-        entityModel.add(linkTo(methodOn(this.getClass()).getAllExpensesByPaymentMode(expense.getPaymentMode())).withRel("expenses-by-payment"));
+        //entityModel.add(linkTo(methodOn(this.getClass()).getAllExpensesByPaymentMode(expense.getPaymentMode())).withRel("expenses-by-payment"));
         entityModel.add(linkTo(methodOn(this.getClass()).deleteExpenseById(expense.getExpenseId())).withRel("delete-expense"));
         entityModel.add(linkTo(methodOn(this.getClass()).deleteUserExpenses(userId)).withRel("delete-user-expenses"));
         return entityModel;
@@ -105,26 +105,26 @@ public class ExpenseController {
         List<EntityModel<Expense>> collect = allExpensesOfUser.stream().map(expense ->
                 EntityModel.of(expense,
                         linkTo(methodOn(this.getClass()).getExpenseById(expense.getExpenseId())).withRel("expense-details"),
-                        linkTo(methodOn(this.getClass()).getAllExpensesByPaymentMode(expense.getPaymentMode())).withRel("expenses-by-mode"),
+                        //linkTo(methodOn(this.getClass()).getAllExpensesByPaymentMode(expense.getPaymentMode())).withRel("expenses-by-mode"),
                         linkTo(methodOn(this.getClass()).deleteExpenseById(expense.getExpenseId())).withRel("delete-expense"),
                         linkTo(methodOn(this.getClass()).deleteUserExpenses(expense.getUserId())).withRel("delete-user-expenses")
                 )).collect(Collectors.toList());
         return CollectionModel.of(collect);
     }
 
-    @GetMapping("/mode-expense/{mode}")
-    public CollectionModel<EntityModel<Expense>> getAllExpensesByPaymentMode(@PathVariable String mode){
-        log.info("Get the expenses by Payment Mode "+mode);
-        List<Expense> allExpensesByMode = expenseService.getAllExpensesByMode(mode);
-        List<EntityModel<Expense>> collect = allExpensesByMode.stream().map(expense ->
-                EntityModel.of(expense,
-                        linkTo(methodOn(this.getClass()).getExpenseById(expense.getExpenseId())).withRel("expense-details"),
-                        linkTo(methodOn(this.getClass()).getAllExpensesOfUser(expense.getUserId())).withRel("user-expenses"),
-                        linkTo(methodOn(this.getClass()).deleteExpenseById(expense.getExpenseId())).withRel("delete-expense"),
-                        linkTo(methodOn(this.getClass()).deleteUserExpenses(expense.getUserId())).withRel("delete-user-expenses")
-                )).collect(Collectors.toList());
-        return CollectionModel.of(collect);
-    }
+//    @GetMapping("/mode-expense/{mode}")
+//    public CollectionModel<EntityModel<Expense>> getAllExpensesByPaymentMode(@PathVariable String mode){
+//        log.info("Get the expenses by Payment Mode "+mode);
+//        List<Expense> allExpensesByMode = expenseService.getAllExpensesByMode(mode);
+//        List<EntityModel<Expense>> collect = allExpensesByMode.stream().map(expense ->
+//                EntityModel.of(expense,
+//                        linkTo(methodOn(this.getClass()).getExpenseById(expense.getExpenseId())).withRel("expense-details"),
+//                        linkTo(methodOn(this.getClass()).getAllExpensesOfUser(expense.getUserId())).withRel("user-expenses"),
+//                        linkTo(methodOn(this.getClass()).deleteExpenseById(expense.getExpenseId())).withRel("delete-expense"),
+//                        linkTo(methodOn(this.getClass()).deleteUserExpenses(expense.getUserId())).withRel("delete-user-expenses")
+//                )).collect(Collectors.toList());
+//        return CollectionModel.of(collect);
+//    }
 
     @GetMapping("/get/{expenseId}")
     public EntityModel<Expense> getExpenseById(@PathVariable int expenseId){
@@ -136,7 +136,7 @@ public class ExpenseController {
         }
         EntityModel<Expense> entityModel = EntityModel.of(expense);
         entityModel.add(linkTo(methodOn(this.getClass()).getAllExpensesOfUser(expense.getUserId())).withRel("user-expenses"));
-        entityModel.add(linkTo(methodOn(this.getClass()).getAllExpensesByPaymentMode(expense.getPaymentMode())).withRel("expenses-by-payment"));
+        //entityModel.add(linkTo(methodOn(this.getClass()).getAllExpensesByPaymentMode(expense.getPaymentMode())).withRel("expenses-by-payment"));
         entityModel.add(linkTo(methodOn(this.getClass()).deleteExpenseById(expense.getExpenseId())).withRel("delete-expense"));
         entityModel.add(linkTo(methodOn(this.getClass()).deleteUserExpenses(expense.getUserId())).withRel("delete-user-expenses"));
         return entityModel;
